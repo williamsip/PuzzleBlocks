@@ -14,14 +14,14 @@ APuzzleBlocksBlock::APuzzleBlocksBlock()
 	struct FConstructorStatics
 	{
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> PlaneMesh;
-		ConstructorHelpers::FObjectFinderOptional<UMaterial> BaseMaterial;
-		ConstructorHelpers::FObjectFinderOptional<UMaterial> BlueMaterial;
-		ConstructorHelpers::FObjectFinderOptional<UMaterial> OrangeMaterial;
+		ConstructorHelpers::FObjectFinderOptional<UMaterial> GreenMaterial;
+		ConstructorHelpers::FObjectFinderOptional<UMaterial> PinkMaterial;
+		ConstructorHelpers::FObjectFinderOptional<UMaterial> BlackMaterial;
 		FConstructorStatics()
 			: PlaneMesh(TEXT("/Game/Puzzle/Meshes/hextile_mesh.hextile_mesh")) // PlaneMesh(TEXT("/Game/Puzzle/Meshes/PuzzleCube.PuzzleCube"))
-			, BaseMaterial(TEXT("/Game/Puzzle/Meshes/BaseMaterial.BaseMaterial"))
-			, BlueMaterial(TEXT("/Game/Puzzle/Meshes/M_Brick_Clay_New.M_Brick_Clay_New")) // BlueMaterial(TEXT("/Game/Puzzle/Meshes/BlueMaterial.BlueMaterial"))
-			, OrangeMaterial(TEXT("/Game/Puzzle/Meshes/M_Tech_Hex_Tile.M_Tech_Hex_Tile")) // OrangeMaterial(TEXT("/Game/Puzzle/Meshes/OrangeMaterial.OrangeMaterial"))
+			, GreenMaterial(TEXT("/Game/Puzzle/Meshes/M_Ground_Moss.M_Ground_Moss"))
+			, PinkMaterial(TEXT("/Game/Puzzle/Meshes/M_Brick_Clay_New.M_Brick_Clay_New")) // BlueMaterial(TEXT("/Game/Puzzle/Meshes/BlueMaterial.BlueMaterial"))
+			, BlackMaterial(TEXT("/Game/Puzzle/Meshes/M_Tech_Hex_Tile.M_Tech_Hex_Tile")) // OrangeMaterial(TEXT("/Game/Puzzle/Meshes/OrangeMaterial.OrangeMaterial"))
 		{
 		}
 	};
@@ -36,15 +36,15 @@ APuzzleBlocksBlock::APuzzleBlocksBlock()
 	BlockMesh->SetStaticMesh(ConstructorStatics.PlaneMesh.Get());
 	BlockMesh->SetRelativeScale3D(FVector(3.f,3.f,3.f));
 	BlockMesh->SetRelativeLocation(FVector(0.f,0.f,25.f));
-	BlockMesh->SetMaterial(0, ConstructorStatics.BlueMaterial.Get());
+	BlockMesh->SetMaterial(0, ConstructorStatics.PinkMaterial.Get());
 	BlockMesh->SetupAttachment(DummyRoot);
 	BlockMesh->OnClicked.AddDynamic(this, &APuzzleBlocksBlock::BlockClicked);
 	BlockMesh->OnInputTouchBegin.AddDynamic(this, &APuzzleBlocksBlock::OnFingerPressedBlock);
 
 	// Save a pointer to the orange material
-	BaseMaterial = ConstructorStatics.BaseMaterial.Get();
-	BlueMaterial = ConstructorStatics.BlueMaterial.Get();
-	OrangeMaterial = ConstructorStatics.OrangeMaterial.Get();
+	PinkMaterial = ConstructorStatics.PinkMaterial.Get();
+	GreenMaterial = ConstructorStatics.GreenMaterial.Get();
+	BlackMaterial = ConstructorStatics.BlackMaterial.Get();
 
 	colour = EPuzzleBlocksBlockColour::Pink;
 }
@@ -96,20 +96,6 @@ void APuzzleBlocksBlock::HandleClicked()
 
 void APuzzleBlocksBlock::Highlight(bool bOn)
 {
-	// Do not highlight if the block has already been activated.
-	if (bIsActive)
-	{
-		return;
-	}
-
-	if (bOn)
-	{
-		BlockMesh->SetMaterial(0, BaseMaterial);
-	}
-	else
-	{
-		BlockMesh->SetMaterial(0, BlueMaterial);
-	}
 }
 
 void APuzzleBlocksBlock::setColour(EPuzzleBlocksBlockColour newColour)
@@ -119,15 +105,15 @@ void APuzzleBlocksBlock::setColour(EPuzzleBlocksBlockColour newColour)
 	switch (colour)
 	{
 		case EPuzzleBlocksBlockColour::Pink :
-			BlockMesh->SetMaterial(0, BlueMaterial);
+			BlockMesh->SetMaterial(0, PinkMaterial);
 			break;
 
 		case EPuzzleBlocksBlockColour::Green:
-			BlockMesh->SetMaterial(0, BaseMaterial);
+			BlockMesh->SetMaterial(0, GreenMaterial);
 			break;
 
 		case EPuzzleBlocksBlockColour::Black:
-			BlockMesh->SetMaterial(0, OrangeMaterial);
+			BlockMesh->SetMaterial(0, BlackMaterial);
 			break;
 	}
 
