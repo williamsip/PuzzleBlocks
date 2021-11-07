@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "PuzzleBlocksVariableTypes.h"
 #include "PuzzleBlocksBlock.generated.h"
 
 /** A block that can be clicked */
@@ -54,9 +55,14 @@ public:
 
 	void Highlight(bool bOn);
 
+	void setColour(EPuzzleBlocksBlockColour newColour);
+
 	/** Pointers to all neighbouring blocks - holds null if no block in that direction */
 	UPROPERTY(EditAnywhere)
 	class APuzzleBlocksBlock* adjacentBlock[6];
+
+	UPROPERTY(EditAnywhere)
+	EPuzzleBlocksBlockColour colour;
 
 public:
 	/** Returns DummyRoot subobject **/

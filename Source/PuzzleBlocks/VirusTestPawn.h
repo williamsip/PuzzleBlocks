@@ -39,6 +39,7 @@ protected:
 	FVector MovementVector;
 
 	int32	dir;
+	int32   infectCountdown;
 
 	/** Choose a new target to move to */
 	void setTarget();

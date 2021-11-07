@@ -3,6 +3,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "Engine/StaticMesh.h"
 #include "Materials/MaterialInstance.h"
+#include "PuzzleBlocksBlock.h"
+#include "PuzzleBlocksVariableTypes.h"
 
 // Sets default values
 AVirusTestPawn::AVirusTestPawn()
@@ -69,20 +71,47 @@ void AVirusTestPawn::Tick(float DeltaTime)
 	;
 	Super::Tick(DeltaTime);
 
-	if (targetBlock == nullptr)
+	if (infectCountdown)
 	{
-		setTarget();
-	}
+		infectCountdown--;
 
-	tempVector = GetActorLocation() + MovementVector / 50.f;
-	
-	if (abs(tempVector.X - TargetLocation.X) < 5 &&
-		abs(tempVector.Y - TargetLocation.Y) < 5)
-	{
-		tempVector = TargetLocation;
+		if (infectCountdown == 0)
+		{
+			currentBlock->setColour(EPuzzleBlocksBlockColour::Black);
+			currentBlock->HandleClicked();
+		}
 	}
 	
-	SetActorLocation(tempVector,true);
+	if (infectCountdown == 0)
+	{
+		if (targetBlock == nullptr)
+		{
+			setTarget();
+		}
+
+		tempVector = GetActorLocation() + MovementVector / 50.f;
+
+		if (abs(tempVector.X - TargetLocation.X) < 5 &&
+			abs(tempVector.Y - TargetLocation.Y) < 5)
+		{
+			tempVector = TargetLocation;
+		}
+
+		SetActorLocation(tempVector, true);
+	
+		if (tempVector == TargetLocation)
+		{
+			currentBlock = targetBlock;
+			targetBlock = nullptr;
+
+			if (currentBlock->colour == EPuzzleBlocksBlockColour::Pink &&
+				FMath::RandRange(0, 9) == 0)
+			{
+				infectCountdown = 100;
+				currentBlock->setColour(EPuzzleBlocksBlockColour::Green);
+			}
+		}
+	}
 
 	FRotator NewRotation = GetActorRotation();
 	float RunningTime = GetGameTimeSinceCreation();
@@ -90,12 +119,6 @@ void AVirusTestPawn::Tick(float DeltaTime)
 	NewRotation.Yaw += DeltaRotation;
 
 	SetActorRotation(NewRotation);
-
-	if (tempVector == TargetLocation)
-	{
-		currentBlock = targetBlock;
-		targetBlock = nullptr;
-	}
 }
 
 // Called to bind functionality to input

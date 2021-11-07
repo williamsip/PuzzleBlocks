@@ -4,12 +4,11 @@
 
 #include "CoreMinimal.h"
 
-/**
- * 
- */
-class PUZZLEBLOCKS_API PuzzleBlocksVariableTypes
+UENUM(BluePrintType)
+enum class EPuzzleBlocksBlockColour : uint8
 {
-public:
-	PuzzleBlocksVariableTypes();
-	~PuzzleBlocksVariableTypes();
+	Pink UMETA(DisplayName = "Pink"),
+	Green UMETA(DisplayName = "Green"),
+	Black UMETA(DisplayName = "Black"),
+	Hole UMETA(DisplayName = "Hole")
 };

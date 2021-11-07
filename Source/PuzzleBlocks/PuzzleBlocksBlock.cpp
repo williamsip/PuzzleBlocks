@@ -45,13 +45,14 @@ APuzzleBlocksBlock::APuzzleBlocksBlock()
 	BaseMaterial = ConstructorStatics.BaseMaterial.Get();
 	BlueMaterial = ConstructorStatics.BlueMaterial.Get();
 	OrangeMaterial = ConstructorStatics.OrangeMaterial.Get();
+
+	colour = EPuzzleBlocksBlockColour::Pink;
 }
 
 void APuzzleBlocksBlock::BlockClicked(UPrimitiveComponent* ClickedComp, FKey ButtonClicked)
 {
 	HandleClicked();
 }
-
 
 void APuzzleBlocksBlock::OnFingerPressedBlock(ETouchIndex::Type FingerIndex, UPrimitiveComponent* TouchedComponent)
 {
@@ -61,6 +62,7 @@ void APuzzleBlocksBlock::OnFingerPressedBlock(ETouchIndex::Type FingerIndex, UPr
 void APuzzleBlocksBlock::HandleClicked()
 {
 	// Check we are not already active
+	/*
 	if (!bIsActive)
 	{
 		bIsActive = true;
@@ -81,14 +83,15 @@ void APuzzleBlocksBlock::HandleClicked()
 		{
 			OwningGrid->AddScore();
 		}
+		*/
 
 		// Make position vector, offset from Grid location
 		const FVector BlockLocation = GetActorLocation() + FVector(0.f,0.f,40.F);
 
-		// Spawn a block
+		// Spawn a virus
 		AVirusTestPawn* NewVirus = GetWorld()->SpawnActor<AVirusTestPawn>(BlockLocation, FRotator(0, 0, 0));
 		NewVirus->currentBlock = this;
-	}
+	// }
 }
 
 void APuzzleBlocksBlock::Highlight(bool bOn)
@@ -107,4 +110,25 @@ void APuzzleBlocksBlock::Highlight(bool bOn)
 	{
 		BlockMesh->SetMaterial(0, BlueMaterial);
 	}
+}
+
+void APuzzleBlocksBlock::setColour(EPuzzleBlocksBlockColour newColour)
+{
+	colour = newColour;
+	
+	switch (colour)
+	{
+		case EPuzzleBlocksBlockColour::Pink :
+			BlockMesh->SetMaterial(0, BlueMaterial);
+			break;
+
+		case EPuzzleBlocksBlockColour::Green:
+			BlockMesh->SetMaterial(0, BaseMaterial);
+			break;
+
+		case EPuzzleBlocksBlockColour::Black:
+			BlockMesh->SetMaterial(0, OrangeMaterial);
+			break;
+	}
+
 }
